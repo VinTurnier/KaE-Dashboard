@@ -4,6 +4,7 @@ import {Auth} from 'aws-amplify';
 import Routes from './services/Routes';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import appStyle from './styles/appStyle';
+import Header from './components/Header';
 
 export default function App() {
   const classes = appStyle();
@@ -37,6 +38,7 @@ export default function App() {
   function renderApp(){
     return(
       <div className="App">
+      <Header menuProps={appProps}/>
       <Routes appProps={appProps}/>
     </div>
     )
