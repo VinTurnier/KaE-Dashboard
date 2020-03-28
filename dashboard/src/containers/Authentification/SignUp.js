@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
   const blankSignUp = {
       firstName: "", lastName: "", email: "",
@@ -81,7 +81,10 @@ export default function SignUp() {
             given_name: signUpData.firstName,
             family_name: signUpData.lastName
             }
-        }).then(data => console.log(data))
+        }).then(()=>{
+            props.setUsername(signUpData.email);
+            props.history.push("/confirmUser")
+        })
           .catch(err => console.log(err));
   }
 

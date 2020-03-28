@@ -10,6 +10,7 @@ export default function App() {
   const [isAuthenticated, userHasAuthenticated] = React.useState(false);
   const [isAuthenticating, setIsAuthenticating] = React.useState(true);
   const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const appProps={
     isAuthenticated,
     userHasAuthenticated,
