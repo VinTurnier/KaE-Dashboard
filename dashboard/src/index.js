@@ -19,20 +19,10 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: "station",
+        name: "user",
         endpoint: config.apiGateway.URL,
         region: config.apiGateway.REGION
       },
-      {
-        name: "inventory",
-        endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
-      },
-      {
-        name: "tank",
-        endpoint: config.apiGateway.URL,
-        region: config.apiGateway.REGION
-      }
     ]
   }
 });

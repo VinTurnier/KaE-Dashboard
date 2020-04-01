@@ -14,7 +14,7 @@ import Container from '@material-ui/core/Container';
 import Phone from '@material-ui/icons/Phone';
 import MuiPhoneNumber from 'material-ui-phone-number';
 
-import {Auth} from 'aws-amplify';
+import {Auth, API} from 'aws-amplify';
 
 function Copyright() {
   return (
@@ -81,9 +81,24 @@ export default function SignUp(props) {
             given_name: signUpData.firstName,
             family_name: signUpData.lastName
             }
-        }).then(()=>{
+        }).then((data)=>{
+            let info = {
+              body: {
+                aws_cognito_sub: data.userSub,
+                firstName: signUpData.firstName,
+                lastName: signUpData.lastName,
+                phoneNumber: signUpData.phoneNumber,
+                description: ""
+              }
+            }
             props.setUsername(signUpData.email);
+            API.post("user","/user",info).then(response=>{
+              console.log(response);
+            }).catch(error => {
+              console.log(error.response)
+          });
             props.history.push("/confirmUser")
+            
         })
           .catch(err => console.log(err));
   }
