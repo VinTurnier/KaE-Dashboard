@@ -17,7 +17,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 // AWS Amplify 
-import {Auth} from 'aws-amplify';
+import {Auth, API} from 'aws-amplify';
 
 // Styles
 import KaeStyle from '../styles/KaeStyle';
@@ -46,10 +46,19 @@ const GmsAppBar= props =>{
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
     const [open, setOpen] = React.useState(false);
-    const [age, setAge] = React.useState(1);
+    const blankStatus = {userId: 0, statusId: 0}
+    const [status, setStatus] = React.useState(blankStatus);
 
+    async function loadStatus(){
+      return await API.get("user","/userstatus")
+    }
     React.useEffect(()=>{
         setOpen(false)
+        loadStatus().then(resp =>{
+          setStatus({
+            userId: resp.message.userId,
+            statusId: resp.message.statusId})
+        });
     },[menuProps.isAuthenticated])
 
     const handleDrawerOpen = () => {
@@ -76,7 +85,19 @@ const GmsAppBar= props =>{
 
     }
     const handleChange = event => {
-        setAge(event.target.value);
+        setStatus({
+          ...status,
+          statusID: event.target.value});
+        let info ={
+          body: {
+            userId: status.userId,
+            statusId: event.target.value
+          }
+        }
+        API.post("user","/userstatus", info).then(resp=>{
+          console.log("Status Updated");
+          window.location.reload(true);
+        });
       };
 
     const renderUserOptions=()=>{
@@ -86,7 +107,7 @@ const GmsAppBar= props =>{
                     <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={age}
+                    value={status.statusId}
                     onChange={handleChange}
                     >
                     <MenuItem value={1}>Available</MenuItem>
