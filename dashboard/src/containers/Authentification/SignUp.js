@@ -29,6 +29,10 @@ function Copyright() {
   );
 }
 
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1)
+}
+
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -74,30 +78,32 @@ export default function SignUp(props) {
 
   const createUser=()=>{
       Auth.signUp({
-        username: signUpData.email,
+        username: signUpData.email.toLowerCase(),
         password: signUpData.password,
         attributes: { 
             phone_number: signUpData.phoneNumber,
-            given_name: signUpData.firstName,
-            family_name: signUpData.lastName
+            given_name: signUpData.firstName.capitalize(),
+            family_name: signUpData.lastName.capitalize()
             }
         }).then((data)=>{
             let info = {
               body: {
                 aws_cognito_sub: data.userSub,
-                firstName: signUpData.firstName,
-                lastName: signUpData.lastName,
+                firstName: signUpData.firstName.capitalize(),
+                lastName: signUpData.lastName.capitalize(),
                 phoneNumber: signUpData.phoneNumber,
                 description: ""
               }
             }
             props.setUsername(signUpData.email);
+            console.log(info)
             API.post("user","/user",info).then(response=>{
               console.log(response);
+              props.history.push("/confirmUser")
             }).catch(error => {
               console.log(error.response)
           });
-            props.history.push("/confirmUser")
+            
             
         })
           .catch(err => console.log(err));

@@ -3,13 +3,11 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Phone from '@material-ui/icons/Phone';
 import Typography from '@material-ui/core/Typography';
-
+import Alert from '@material-ui/lab/Alert';
 import Container from '@material-ui/core/Container';
 import loginStyle from '../../styles/loginStyle';
 
@@ -19,12 +17,13 @@ import {Auth} from 'aws-amplify';
 export default function Login(props) {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [alert, setAlert] = React.useState(null)
     const classes = loginStyle();
     
     async function handleSubmit(event) {
         event.preventDefault();
         try {
-            await Auth.signIn(email, password);
+            await Auth.signIn(email.toLowerCase(), password);
             props.userHasAuthenticated(true);
             props.setUsername(email);
         } catch (e) {
@@ -34,7 +33,7 @@ export default function Login(props) {
                 
             }
             else{
-                alert(e.message)
+                setAlert(e.message)
             }
         }
     }
@@ -47,6 +46,7 @@ export default function Login(props) {
         return (
             <Container component="main" maxWidth="xs">
         <CssBaseline />
+        
         <div className={classes.paper}>
             <Avatar className={classes.avatar}>
             <Phone />
@@ -54,6 +54,7 @@ export default function Login(props) {
             <Typography component="h1" variant="h5">
             Bienvenu a Kasik a L'Ecoute
             </Typography>
+            {alert!==null?<Alert severity="error">{alert}</Alert>:null}
             <form className={classes.form} noValidate onSubmit={handleSubmit}>
             <TextField
                 variant="outlined"
