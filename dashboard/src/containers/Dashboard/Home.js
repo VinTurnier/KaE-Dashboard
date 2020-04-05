@@ -35,20 +35,14 @@ export default function Home(props){
             return;
           }
 
-        function loadUserProfile() {
-            return API.get("user", '/user');
-          }
-
         function loadUserHistory(){
             return API.get("user","/history")
         }
 
         async function onLoad(){
             try{
-                let response = await loadUserProfile();
-                console.log(response)
-                response = await loadUserHistory();
-                console.log(response)
+                let response = await loadUserHistory();
+                setInventory(response.message)
             } catch (e){
                console.log(e)
             }

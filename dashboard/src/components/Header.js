@@ -53,12 +53,15 @@ const GmsAppBar= props =>{
       return await API.get("user","/userstatus")
     }
     React.useEffect(()=>{
-        setOpen(false)
-        loadStatus().then(resp =>{
-          setStatus({
-            userId: resp.message.userId,
-            statusId: resp.message.statusId})
-        });
+      if (menuProps.isAuthenticated === false){
+        return
+      }
+      setOpen(false)
+      loadStatus().then(resp =>{
+        setStatus({
+          userId: resp.message.userId,
+          statusId: resp.message.statusId})
+      });
     },[menuProps.isAuthenticated])
 
     const handleDrawerOpen = () => {
@@ -78,11 +81,21 @@ const GmsAppBar= props =>{
     };
 
     async function handleSignOutButton(){
-        setAnchorEl(null);
-        await Auth.signOut();
-        menuProps.userHasAuthenticated(false);
-        props.history.push('/login')
-
+        let info ={
+          body: {
+            userId: status.userId,
+            statusId: 2 // 2 for busy
+          }
+        }
+        await API.post("user","/userstatus", info).then(resp=>{
+          console.log("Status Updated")
+          setAnchorEl(null);
+          Auth.signOut().then(()=>{
+            menuProps.userHasAuthenticated(false);
+            props.history.push('/login')
+          });
+          
+        });
     }
     const handleChange = event => {
         setStatus({
@@ -112,7 +125,7 @@ const GmsAppBar= props =>{
                     >
                     <MenuItem value={1}>Available</MenuItem>
                     <MenuItem value={2}>Busy</MenuItem>
-                    <MenuItem value={3}>On Call</MenuItem>
+                    <MenuItem disabled value={3}>On Call</MenuItem>
                     </Select>
                 </FormControl>
                 <IconButton
@@ -139,9 +152,6 @@ const GmsAppBar= props =>{
                         open={openMenu}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={handleClose}>Account</MenuItem>
-                        <MenuItem onClick={handleClose}>Settings</MenuItem>
                         <MenuItem onClick={handleSignOutButton}>Logout</MenuItem>
                     </Menu>
             </div>

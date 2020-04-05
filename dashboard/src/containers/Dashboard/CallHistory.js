@@ -16,8 +16,6 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -214,7 +212,7 @@ export default function CallHistory(props) {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = props.inventoryData.map(n => n.name);
+      const newSelecteds = props.inventoryData.map(n => n.date);
       setSelected(newSelecteds);
       return;
     }
@@ -237,7 +235,7 @@ export default function CallHistory(props) {
         selected.slice(selectedIndex + 1),
       );
     }
-
+    console.log(newSelected)
     setSelected(newSelected);
   };
 
@@ -284,13 +282,13 @@ export default function CallHistory(props) {
               {stableSort(props.inventoryData, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.tank_name);
+                  const isItemSelected = isSelected(row.date);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, index)}
+                      onClick={event => handleClick(event, row.date)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -304,12 +302,12 @@ export default function CallHistory(props) {
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.tank_name}
+                        {row.phoneNumber}
                       </TableCell>
-                      <TableCell align="right">{row.stockBoD}</TableCell>
-                      <TableCell align="right">{row.sales}</TableCell>
-                      <TableCell align="right">{row.stockEoD}</TableCell>
-                      <TableCell align="right">{row.date_added}</TableCell>
+                      <TableCell align="right">{row.callStart}</TableCell>
+                      <TableCell align="right">{row.callEnd}</TableCell>
+                      <TableCell align="right">{(Date.parse(row.callEnd) - Date.parse(row.callStart))/1000} Sec</TableCell>
+                      <TableCell align="right">{row.date}</TableCell>
                     </TableRow>
                   );
                 })}
