@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Phone from '@material-ui/icons/Phone';
 import MuiPhoneNumber from 'material-ui-phone-number';
+import Alert from '@material-ui/lab/Alert';
 
 import {Auth, API} from 'aws-amplify';
 
@@ -55,6 +56,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SignUp(props) {
   const classes = useStyles();
+  const [alert, setAlert] = React.useState(null)
   const blankSignUp = {
       firstName: "", lastName: "", email: "",
       phoneNumber: "", password: "", password1: "",errors:{
@@ -101,12 +103,15 @@ export default function SignUp(props) {
               console.log(response);
               props.history.push("/confirmUser")
             }).catch(error => {
+              setAlert(error.message)
               console.log(error.response)
           });
             
             
         })
-          .catch(err => console.log(err));
+          .catch(err =>{
+            setAlert(err.message)
+             console.log(err)});
   }
 
   return (
@@ -119,6 +124,7 @@ export default function SignUp(props) {
             <Typography component="h1" variant="h5">
             Bienvenu a Kasik a L'Ecoute
             </Typography>
+            {alert!==null?<Alert severity="error">{alert}</Alert>:null}
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
