@@ -78,10 +78,20 @@ export default function SignUp(props) {
       )
   }
 
+  const handlePasswordComparison=()=>{
+    if (signUpData.password === signUpData.password1){
+      return signUpData.password
+    }
+    else{
+      setAlert("The Password's entered do not match");
+    }
+    return "";
+  }
+
   const createUser=()=>{
       Auth.signUp({
         username: signUpData.email.toLowerCase(),
-        password: signUpData.password,
+        password: handlePasswordComparison(),
         attributes: { 
             phone_number: signUpData.phoneNumber,
             given_name: signUpData.firstName.capitalize(),
@@ -110,7 +120,12 @@ export default function SignUp(props) {
             
         })
           .catch(err =>{
-            setAlert(err.message)
+            if (signUpData.password !== signUpData.password1){
+              setAlert("The Passwords entered do not match");
+            }
+            else{
+              setAlert(err.message);
+            }
              console.log(err)});
   }
 
