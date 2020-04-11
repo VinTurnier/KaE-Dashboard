@@ -7,6 +7,8 @@ import config from './config';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter as Router} from 'react-router-dom';
 
+import {configureAuthStore} from './hook-store/auth-store';
+
 
 Amplify.configure({
   Auth: {
@@ -26,6 +28,9 @@ Amplify.configure({
     ]
   }
 });
+
+configureAuthStore();
+
 
 ReactDOM.render(
   <Router>

@@ -6,6 +6,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import appStyle from './styles/appStyle';
 import Header from './components/Header';
 
+import {useStore} from './hook-store/store';
+
 export default function App() {
   const classes = appStyle();
   const [isAuthenticated, userHasAuthenticated] = React.useState(false);
